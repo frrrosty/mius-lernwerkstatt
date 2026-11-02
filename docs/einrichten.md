@@ -60,6 +60,25 @@ rm lernwerkstatt_deploy known_hosts_lernwerkstatt
 
 Der private Schlüssel liegt jetzt nur noch in GitHub. Geht etwas schief, erzeugst du einfach einen neuen und ersetzt den alten bei Hostpoint und in GitHub. Das ist «Rotieren» aus Schritt 05.
 
+## 6b. Deploy-Schlüssel auf dem Server einschränken
+
+Ein Deploy-Schlüssel öffnet sonst das ganze Hosting-Konto, also auch alle anderen Seiten darauf. Weil dieser Deploy nur rsync braucht, lässt er sich mit `rrsync` (gehört zu rsync, Unterordner `support/`) auf den Webordner beschränken. In `~/.ssh/authorized_keys` steht dann vor dem Schlüssel:
+
+```
+command="<python3> <pfad-zu>/rrsync -absolute <webordner>",restrict ssh-ed25519 AAAA... github-deploy-lernwerkstatt
+```
+
+- `command=` erzwingt bei diesem Schlüssel immer `rrsync`, egal welchen Befehl der Client schickt.
+- `rrsync` lässt nur rsync durch und nur innerhalb des Webordners. `-absolute` erlaubt den vollen Pfad aus `SSH_TARGET_DIR`. Ohne diese Option würde ein absoluter Pfad als Unterordner gelesen, und der Deploy schriebe still an den falschen Ort.
+- `restrict` verbietet Terminal und Weiterleitungen.
+
+Beim Einrichten gelernt:
+- Das Skript mit Prüfsumme herunterladen und den Pfad zu rsync anpassen (`RSYNC = ...`), auf FreeBSD liegt es nicht in `/usr/bin`.
+- `authorized_keys` nur mit Sicherungskopie und offener zweiter Verbindung ändern, und den Befehl direkt auf dem Server ausführen. Durch PowerShell hindurch gehen Anführungszeichen verloren.
+- Prüfen mit `ssh-keygen -lf ~/.ssh/authorized_keys`: Nur Zeilen, die dort erscheinen, versteht der Server. Ein `grep` zeigt bloss, dass Text da ist.
+- Jede letzte Zeile braucht einen Zeilenumbruch. Sonst klebt `cat >>` den nächsten Schlüssel an den Kommentar des vorherigen.
+- Einen Schlüssel pro Projekt. Zwei Projekte mit demselben Schlüssel lassen sich nicht getrennt einschränken.
+
 ## 7. Ausliefern
 
 Jeder Push auf `main` liefert aus. Von Hand geht es mit *Actions → Deploy → Run workflow*. Die Action prüft die Übungen, baut die Seite, prüft die Pyodide-Prüfsumme, trägt den Pfad der Passwortdatei ein und lädt alles per rsync hoch.
