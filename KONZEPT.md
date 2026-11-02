@@ -1,6 +1,6 @@
 # Lernwerkstatt: Konzept
 
-**Status:** Konzept, noch nichts gebaut
+**Status:** Prototyp Etappe 1 gebaut (Lernpfad Sicherheit), noch nicht ausgeliefert
 **Erfasst:** 2026-11-02
 **Grundlage:** Anforderungs-Dashboard «Lernwerkstatt Anforderungen» (Claude-Artefakt), Antworten vom 2. November 2026, festgehalten in [docs/anforderungen-2026-11-02.md](docs/anforderungen-2026-11-02.md)
 
@@ -95,17 +95,32 @@ Die Lernwerkstatt enthält Wissen über die eigenen Systeme: Aufbau, Schwachstel
 - Die Demo-Fassung für Kolleginnen und Kollegen (später) wird aus denselben Quellen ohne Projektseiten erzeugt.
 - Der Lernpfad Sicherheit beginnt mit einem Bedrohungsmodell für genau diese App.
 
+## Entscheide vom 2. November 2026
+
+Nach dem Lesen des Konzepts: Samuel will an einem echten Prototyp starten, mit **Programmieraufgaben in Python** (Anknüpfen an die Grundlagen aus dem Studium) und **Sicherheit früh**, damit er künftig gezielter auf Sicherheitsaspekte prüfen und prompten kann. Daraus folgt für Etappe 1:
+
+- **Der erste Lernpfad ist «Sicherheit von Grund auf»**, acht Schritte: Python auffrischen, Bedrohungsmodell, Passwörter, Eingaben, Ausgaben, Geheimnisse, Bremsen, Lieferkette. Jeder Schritt hat Text auf Studienniveau mit Literatur, Projektbezug, eine Python-Übung mit Tests, Karten und einen **Prompt-Baustein**, mit dem Claude die eigenen Projekte genau zu diesem Punkt prüft.
+- **Python läuft im Browser** (Pyodide, Python als WebAssembly). Übungen funktionieren damit auf Handy, Tablet und Laptop ohne Installation, und der Code verlässt das Gerät nie. Die gleichen Übungen laufen auch lokal mit `python pruefen.py NN`.
+- **Pyodide kommt vom eigenen Server**, nicht von einem CDN. `bauen.py` lädt es aus npm und prüft die SHA-512-Prüfsumme. So bleibt die Content-Security-Policy streng (`script-src 'self' 'wasm-unsafe-eval'`).
+- **Übergangslösungen im Prototyp**, beide bewusst: Fortschritt, Code und Notizen liegen im Browser (localStorage), also nicht zwischen Geräten synchronisiert. Der Zugang ist mit Basic Auth geschützt statt mit dem MIUS-Konto. Beides wird in Etappe 1b ersetzt.
+- **Projektseiten zum Erklären** (MIus Notes, Shutter Call, PräsenzTool) folgen nach dem Lernpfad.
+- **Auslieferung** per GitHub Action auf Knopfdruck, SSH mit festem Server-Fingerabdruck, Actions auf Commit-Hash festgelegt. Einrichtung: [docs/einrichten.md](docs/einrichten.md).
+
 ## Etappen
 
 Jede Etappe ist für sich nutzbar.
 
-**Etappe 1: Erklären können.** Ziel: Samuel kann die drei wichtigsten Projekte in zwei Minuten ehrlich erklären und die Fachbegriffe dahinter sicher verwenden.
+**Etappe 1: Sicherheit und Python.** (Prototyp gebaut)
+- Lernpfad «Sicherheit von Grund auf», acht Schritte mit Python-Übungen, 39 Karten, Prompt-Bausteinen
+- Kartentraining mit fünf Fächern (Leitner)
+- Installierbare Web-App, offline lesbar
+- Auslieferung auf `lernwerkstatt.mius.ch` hinter Basic Auth
+
+**Etappe 1b: Erklären können.**
 - Projektseiten für MIus Notes, Shutter Call, PräsenzTool
-- Gebiete: Geheimnisse, CI/CD, Anmeldung und Sitzungen, Web-Sicherheit, Datenbanken
-- Lernpfad «Sicherheit von Grund auf», Schritte 1 bis 4
-- Karten für den Drei-Minuten-Modus (rund 60)
+- Gebiete: CI/CD, Anmeldung und Sitzungen, Datenbanken
 - Landkarte und Lückenkarte
-- Auslieferung auf `lernwerkstatt.mius.ch` hinter Anmeldung, mobil nutzbar
+- Anmeldung über das MIUS-Konto, Fortschritt auf dem Server statt im Browser
 
 **Etappe 2: Üben am eigenen Code.** Übungs-Repo mit Aufgaben, Lösungen als Pull Request. Fortschritt pro Gebiet. Weitere Projektseiten (mius.ch, noScribe-Editor, OLAT Builder, Auto-Distanzmesser).
 

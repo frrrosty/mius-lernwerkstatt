@@ -1,0 +1,42 @@
+# Lernwerkstatt auf Hostpoint (Apache)
+#
+# Zugang: vorerst Basic Auth über HTTPS. Die Passwortdatei liegt ausserhalb des
+# Webordners. Ihr Pfad kommt beim Deploy aus dem Secret HTPASSWD_PFAD, damit
+# kein Serverpfad im Repo steht. Später: Anmeldung über das MIUS-Konto.
+AuthType Basic
+AuthName "Lernwerkstatt"
+AuthUserFile __HTPASSWD_PFAD__
+Require valid-user
+
+Options -Indexes
+
+<IfModule mod_rewrite.c>
+  RewriteEngine On
+  RewriteCond %{HTTPS} !=on
+  RewriteRule ^ https://%{HTTP_HOST}%{REQUEST_URI} [L,R=301]
+</IfModule>
+
+# Python-Quelltext der Übungen nicht als Download anbieten, nur der Runner wird gebraucht
+<FilesMatch "^(?!runner\.py$).*\.py$">
+  Require all denied
+</FilesMatch>
+
+AddType application/wasm .wasm
+AddType application/manifest+json .webmanifest
+
+<IfModule mod_headers.c>
+  # Content-Security-Policy: nur eigene Quellen. 'wasm-unsafe-eval' braucht
+  # Pyodide, um WebAssembly zu übersetzen; JavaScript-eval bleibt verboten.
+  Header always set Content-Security-Policy "default-src 'self'; script-src 'self' 'wasm-unsafe-eval'; worker-src 'self'; connect-src 'self'; img-src 'self' data:; style-src 'self'; font-src 'self'; frame-ancestors 'none'; base-uri 'none'; form-action 'none'; object-src 'none'"
+  Header always set Strict-Transport-Security "max-age=31536000"
+  Header always set X-Content-Type-Options "nosniff"
+  Header always set Referrer-Policy "no-referrer"
+  Header always set Permissions-Policy "camera=(), microphone=(), geolocation=()"
+  Header always set X-Robots-Tag "noindex, nofollow"
+  <FilesMatch "\.(html|js|webmanifest)$">
+    Header set Cache-Control "no-cache"
+  </FilesMatch>
+  <FilesMatch "\.(wasm|zip)$">
+    Header set Cache-Control "public, max-age=2592000"
+  </FilesMatch>
+</IfModule>
