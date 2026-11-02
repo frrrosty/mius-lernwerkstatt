@@ -1,7 +1,9 @@
 # Auslieferung auf Hostpoint per SSH und rsync.
 #
-# Läuft nur von Hand (Actions → «Deploy» → Run workflow), nie automatisch.
-# So entscheidest du, wann etwas live geht. Einrichtung: docs/einrichten.md
+# Läuft bei jedem Push auf main und zusätzlich von Hand (Actions → Deploy →
+# Run workflow). Andere Branches gehen nie live: Dort kannst du ausprobieren,
+# und erst ein Merge nach main veröffentlicht. Bevor etwas hochgeladen wird,
+# müssen alle Übungen ihre Prüfung bestehen. Einrichtung: docs/einrichten.md
 #
 # Benötigte Secrets (Settings → Secrets and variables → Actions):
 #   SSH_HOST          Hostname des Servers
@@ -13,6 +15,8 @@
 name: Deploy
 
 on:
+  push:
+    branches: [main]
   workflow_dispatch:
 
 permissions:

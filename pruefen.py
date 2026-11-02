@@ -20,7 +20,8 @@ def main() -> int:
     if len(sys.argv) < 2:
         print(__doc__)
         return 1
-    treffer = sorted(PFAD.glob(sys.argv[1].zfill(2) + "-*"))
+    nr = sys.argv[1].split("-")[0]   # «03» oder «03-eingaben», beides geht
+    treffer = sorted(PFAD.glob(nr.zfill(2) + "-*"))
     if not treffer:
         print(f"Keinen Schritt {sys.argv[1]} gefunden.")
         return 1

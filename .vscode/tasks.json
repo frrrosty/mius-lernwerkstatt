@@ -1,0 +1,37 @@
+{
+  "version": "2.0.0",
+  "tasks": [
+    {
+      "label": "Übung prüfen",
+      "detail": "Prüft die Übung des gerade offenen Schritts (aufgabe.py)",
+      "type": "shell",
+      "command": "python pruefen.py ${fileDirnameBasename}",
+      "group": { "kind": "test", "isDefault": true },
+      "presentation": { "reveal": "always", "clear": true },
+      "problemMatcher": []
+    },
+    {
+      "label": "Alle Übungen testen",
+      "type": "shell",
+      "command": "python -m pytest -q tests",
+      "group": "test",
+      "problemMatcher": []
+    },
+    {
+      "label": "Seite bauen",
+      "type": "shell",
+      "command": "python bauen.py",
+      "group": { "kind": "build", "isDefault": true },
+      "problemMatcher": []
+    },
+    {
+      "label": "Vorschau starten",
+      "detail": "http://localhost:8710 mit derselben CSP wie auf dem Server",
+      "type": "shell",
+      "command": "python werkzeug/vorschau.py",
+      "isBackground": true,
+      "dependsOn": "Seite bauen",
+      "problemMatcher": []
+    }
+  ]
+}

@@ -62,7 +62,7 @@ Der private Schlüssel liegt jetzt nur noch in GitHub. Geht etwas schief, erzeug
 
 ## 7. Ausliefern
 
-*Actions → Deploy → Run workflow*. Die Action prüft die Übungen, baut die Seite, prüft die Pyodide-Prüfsumme, trägt den Pfad der Passwortdatei ein und lädt alles per rsync hoch.
+Jeder Push auf `main` liefert aus. Von Hand geht es mit *Actions → Deploy → Run workflow*. Die Action prüft die Übungen, baut die Seite, prüft die Pyodide-Prüfsumme, trägt den Pfad der Passwortdatei ein und lädt alles per rsync hoch.
 
 ## Danach prüfen
 
